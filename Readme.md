@@ -1,0 +1,1 @@
+This is a simple appointment booking app that'll enable a user to Enter his details, so We can store his data and book and appointment

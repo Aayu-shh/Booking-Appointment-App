@@ -87,5 +87,5 @@ function showOutput(res) {
 
     li.append(editBtn);
     li.append(delBtn);
-    itemList.append(li);
+    itemList.prepend(li);
 };

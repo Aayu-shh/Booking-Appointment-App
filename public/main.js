@@ -1,16 +1,30 @@
-//Crudcrud Links MUST be replaced for the code to work in FUTURE
+/*
+* Note: Currently Working/Complete functionalities -
+*       1. Display Appointment list
+*       2. Add New Appointment to DB
+*       *3. Refresh Page to see it on the bottom of AppointMents List
+*
+*       To Add/Fix -
+*       1. showOutput function - to ADD new user to page instantly (Currenty Refresh needed)
+*       2. Add DELETE Funtionality
+*        3. Add UPDATE functionality
+*
+*/
 const myForm = document.querySelector("#myForm");
 const named = document.querySelector("#name");
 const email = document.querySelector("#email");
 const phone = document.querySelector("#phone");
+
 const msg = document.querySelector(".msg");
-const lMsg = document.querySelector(".listMsg");
 const itemList = document.querySelector(".items");
 
 window.addEventListener("DOMContentLoaded", (e) => {
-    axios.get("https://crudcrud.com/api/b114c6909e714a77b31f23f09b00eb8e/appointments")
+    axios.get("http://localhost:1000/users")
         .then(resObj => {
-            (resObj.data).forEach(res => showOutput(res));
+            (resObj.data).forEach(res => {
+                console.log(res);
+                showOutput(res);
+            });
         })
 })
 
@@ -30,7 +44,7 @@ myForm.addEventListener('submit', (e) => {
             phone: phone.value
         };
 
-        axios.post("https://crudcrud.com/api/b114c6909e714a77b31f23f09b00eb8e/appointments", user)
+        axios.post("http://localhost:1000/admin/add-user", user)
             .then(res => showOutput(res.data));
         //clear Fields
         named.value = '';
@@ -44,14 +58,16 @@ function showOutput(res) {
     li.append(document.createTextNode(`${(res.name)} : ${(res.email)} : ${(res.phone)}`))
     let delBtn = document.createElement('button');
     delBtn.append(document.createTextNode("Delete User"));
+    delBtn.classList = "btn btn-danger m-1"
     let editBtn = document.createElement('button');
     editBtn.append(document.createTextNode("Edit User"));
+    editBtn.classList = "btn btn-warning m-1"
 
     editBtn.onclick = () => {
         named.value = res.name;
         email.value = res.email;
         phone.value = res.phone;
-        axios.delete(`https://crudcrud.com/api/b114c6909e714a77b31f23f09b00eb8e/appointments/${res._id}`)
+        axios.delete(`axios.delete(http://localhost:1000/users/${res._id})`)
             .then((editRes) => {
                 console.log(`Editing User ${named.value}'s Details`);
                 li.remove();
@@ -61,7 +77,7 @@ function showOutput(res) {
 
     delBtn.onclick = () => {
         let userName = res.name;
-        axios.delete(`https://crudcrud.com/api/b114c6909e714a77b31f23f09b00eb8e/appointments/${res._id}`)
+        axios.delete(`http://localhost:1000/users/${res._id}`)
             .then(res => {
                 console.log(`${userName}'s data was deleted sucessfully`);
                 li.remove();

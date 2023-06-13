@@ -4,11 +4,7 @@
 *       2. Add New Appointment to DB
 *       3  Added DELETE Funtionality
 *       4. Added UPDATE functionality
-*       *5. Refresh Page to see it on the bottom of AppointMents List
-*
-*       To Add/Fix -
-*       1. showOutput function - to ADD new user to page instantly (Currenty Refresh needed)
-*
+*       5. showOutput function - to ADD new user to page instantly
 */
 const myForm = document.querySelector("#myForm");
 const named = document.querySelector("#name");
@@ -45,7 +41,11 @@ myForm.addEventListener('submit', (e) => {
         };
 
         axios.post("http://localhost:1000/add-user", user)
-            .then(res => showOutput(res.data));
+            .then(useless => axios.get("http://localhost:1000/users")
+                .then(resObj => { 
+                    showOutput((resObj.data)[resObj.data.length - 1]);                          //Taking the LATEST user from Updated list of USERS
+                    console.log((resObj.data)[resObj.data.length - 1]);
+                }));
         //clear Fields
         named.value = '';
         email.value = '';
@@ -87,5 +87,5 @@ function showOutput(res) {
 
     li.append(editBtn);
     li.append(delBtn);
-    itemList.append(li);    
+    itemList.append(li);
 };

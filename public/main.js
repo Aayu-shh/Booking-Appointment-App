@@ -2,12 +2,12 @@
 * Note: Currently Working/Complete functionalities -
 *       1. Display Appointment list
 *       2. Add New Appointment to DB
-*       *3. Refresh Page to see it on the bottom of AppointMents List
+*       3  Added DELETE Funtionality
+*       4. Added UPDATE functionality
+*       *5. Refresh Page to see it on the bottom of AppointMents List
 *
 *       To Add/Fix -
 *       1. showOutput function - to ADD new user to page instantly (Currenty Refresh needed)
-*       2. Add DELETE Funtionality
-*        3. Add UPDATE functionality
 *
 */
 const myForm = document.querySelector("#myForm");
@@ -18,7 +18,7 @@ const phone = document.querySelector("#phone");
 const msg = document.querySelector(".msg");
 const itemList = document.querySelector(".items");
 
-window.addEventListener("DOMContentLoaded", (e) => {
+window.addEventListener("DOMContentLoaded", () => {
     axios.get("http://localhost:1000/users")
         .then(resObj => {
             (resObj.data).forEach(res => {
@@ -44,7 +44,7 @@ myForm.addEventListener('submit', (e) => {
             phone: phone.value
         };
 
-        axios.post("http://localhost:1000/admin/add-user", user)
+        axios.post("http://localhost:1000/add-user", user)
             .then(res => showOutput(res.data));
         //clear Fields
         named.value = '';
@@ -67,7 +67,7 @@ function showOutput(res) {
         named.value = res.name;
         email.value = res.email;
         phone.value = res.phone;
-        axios.delete(`axios.delete(http://localhost:1000/users/${res._id})`)
+        axios.delete(`http://localhost:1000/users/${res.id}`)
             .then((editRes) => {
                 console.log(`Editing User ${named.value}'s Details`);
                 li.remove();
@@ -77,7 +77,7 @@ function showOutput(res) {
 
     delBtn.onclick = () => {
         let userName = res.name;
-        axios.delete(`http://localhost:1000/users/${res._id}`)
+        axios.delete(`http://localhost:1000/users/${res.id}`)
             .then(res => {
                 console.log(`${userName}'s data was deleted sucessfully`);
                 li.remove();
@@ -87,7 +87,5 @@ function showOutput(res) {
 
     li.append(editBtn);
     li.append(delBtn);
-    itemList.append(li);
-
-    console.log(res);
+    itemList.append(li);    
 };

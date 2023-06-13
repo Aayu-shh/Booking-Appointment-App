@@ -20,3 +20,10 @@ exports.showUsers = (req, res) => {
             res.send(result[0]);
         })
 }
+
+exports.deleteUser = (req,res) => {
+    const id = req.params.uid;
+    db.execute("DELETE FROM users WHERE id = ?",[id])
+    .then(result => res.send(result))
+    .catch(err => console.log(err));
+}

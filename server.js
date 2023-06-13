@@ -18,8 +18,10 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + '/public/index.html')
 })
 
-app.post("/admin/add-user", adminController.addUser);
+app.post("/add-user", adminController.addUser);
 
 app.get("/users", adminController.showUsers);
+
+app.delete("/users/:uid",adminController.deleteUser);
 
 app.listen(1000);

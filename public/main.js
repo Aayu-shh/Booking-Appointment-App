@@ -1,16 +1,26 @@
-//Crudcrud Links MUST be replaced for the code to work in FUTURE
+/*
+* Note: Currently Working/Complete functionalities -
+*       1. Display Appointment list
+*       2. Add New Appointment to DB
+*       3  Added DELETE Funtionality
+*       4. Added UPDATE functionality
+*       5. showOutput function - to ADD new user to page instantly
+*/
 const myForm = document.querySelector("#myForm");
 const named = document.querySelector("#name");
 const email = document.querySelector("#email");
 const phone = document.querySelector("#phone");
+
 const msg = document.querySelector(".msg");
-const lMsg = document.querySelector(".listMsg");
 const itemList = document.querySelector(".items");
 
-window.addEventListener("DOMContentLoaded", (e) => {
-    axios.get("https://crudcrud.com/api/b114c6909e714a77b31f23f09b00eb8e/appointments")
+window.addEventListener("DOMContentLoaded", () => {
+    axios.get("http://localhost:1000/users")
         .then(resObj => {
-            (resObj.data).forEach(res => showOutput(res));
+            (resObj.data).forEach(res => {
+                console.log(res);
+                showOutput(res);
+            });
         })
 })
 
@@ -30,8 +40,12 @@ myForm.addEventListener('submit', (e) => {
             phone: phone.value
         };
 
-        axios.post("https://crudcrud.com/api/b114c6909e714a77b31f23f09b00eb8e/appointments", user)
-            .then(res => showOutput(res.data));
+        axios.post("http://localhost:1000/add-user", user)
+            .then(useless => axios.get("http://localhost:1000/users")
+                .then(resObj => { 
+                    showOutput((resObj.data)[resObj.data.length - 1]);                          //Taking the LATEST user from Updated list of USERS
+                    console.log((resObj.data)[resObj.data.length - 1]);
+                }));
         //clear Fields
         named.value = '';
         email.value = '';
@@ -44,14 +58,16 @@ function showOutput(res) {
     li.append(document.createTextNode(`${(res.name)} : ${(res.email)} : ${(res.phone)}`))
     let delBtn = document.createElement('button');
     delBtn.append(document.createTextNode("Delete User"));
+    delBtn.classList = "btn btn-danger m-1"
     let editBtn = document.createElement('button');
     editBtn.append(document.createTextNode("Edit User"));
+    editBtn.classList = "btn btn-warning m-1"
 
     editBtn.onclick = () => {
         named.value = res.name;
         email.value = res.email;
         phone.value = res.phone;
-        axios.delete(`https://crudcrud.com/api/b114c6909e714a77b31f23f09b00eb8e/appointments/${res._id}`)
+        axios.delete(`http://localhost:1000/users/${res.id}`)
             .then((editRes) => {
                 console.log(`Editing User ${named.value}'s Details`);
                 li.remove();
@@ -61,7 +77,7 @@ function showOutput(res) {
 
     delBtn.onclick = () => {
         let userName = res.name;
-        axios.delete(`https://crudcrud.com/api/b114c6909e714a77b31f23f09b00eb8e/appointments/${res._id}`)
+        axios.delete(`http://localhost:1000/users/${res.id}`)
             .then(res => {
                 console.log(`${userName}'s data was deleted sucessfully`);
                 li.remove();
@@ -71,7 +87,5 @@ function showOutput(res) {
 
     li.append(editBtn);
     li.append(delBtn);
-    itemList.append(li);
-
-    console.log(res);
+    itemList.prepend(li);
 };
